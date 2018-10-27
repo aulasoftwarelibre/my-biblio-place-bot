@@ -1,18 +1,17 @@
 # coding=utf-8
 from telebot import util
 from application import bot
-from model.chat import Chat
+from model.User import User
 
 
-@bot.message_handler(commands=['save'])
-def save(message):
+def update_user_status(message):
     """
     Guarda un dato en el chat que se puede recuperar después
     """
 
     data = util.extract_arguments(message.text)
     if not data:
-        bot.reply_to(message, "Debe indicar el dato que quiere que guarde")
+        bot.reply_to(message, "Error del servidor, contacte el administrador github.com/aulasoftwarelibre/my-biblio-place-bot")
         return
 
     chat_id = message.chat.id
@@ -20,16 +19,45 @@ def save(message):
     bot.reply_to(message, "Dato guardado. Usa /load para recuperar")
 
 
-@bot.message_handler(commands=['load'])
+@bot.message_handler(commands=['checkin'])
+def checkin(message):
+    """
+    Guarda un dato en el chat que se puede recuperar después
+    """
+    uid = message.from_user.id
+    place = "test"
+    status = "checked in"
+    User.set_config(uid, place, status)
+    bot.reply_to(message, "checked in at %s" %place)
+    bot.reply_to(message, "uid %s" %uid)
+
+
+@bot.message_handler(commands=['checkout'])
 def load(message):
     """
     Recupera un dato guardado con save
     """
 
-    chat_id = message.chat.id
-    data = Chat.get_config(chat_id, 'memory')
-    if not data:
-        bot.reply_to(message, "Aún no has guardado nada")
-        return
+    uid = message.from_user.id
+    data = User.get_config(uid)
+    place = data.place
+    status = "checked out"
+    User.set_config(uid, "", status)
+    bot.reply_to(message, "checked out from %s" %place)
 
-    bot.reply_to(message, "Dato recuperado: %s" % data.value)
+@bot.message_handler(commands=['list'])
+def load(message):
+    """
+    Recupera un dato guardado con save
+    """
+
+    users = User.get_checked_in_at("test")
+
+    if len(users)>0:
+        for user in users:
+            uid = user.uid
+            bot.reply_to(message, "user: %s" % uid)
+    else:
+        bot.reply_to(message, "not users in this place")
+
+
