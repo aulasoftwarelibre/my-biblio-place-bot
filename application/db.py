@@ -1,28 +1,30 @@
 # coding=utf-8
-from telebot import util
 from application import bot
 from model.User import User
-
+from application.boards import getanswer
 
 
 @bot.callback_query_handler(func=lambda lib: lib.data in ["BRabanales", "BMedicinaEnfermeria", "BCienciasEducacion", "BDerecho", "BFilosofiaLetras", "BGeneral"])
 def checkin(lib):
     uid = lib.message.chat.id
     data = User.get_config(uid)
-    print(data.status)
     if data.status == "requesting":
         place = lib.data
         status = "requesting"
         User.set_config(uid, place, status)
-        bot.reply_to(lib.message, "requested at %s" % place)
-        bot.reply_to(lib.message, "as user %s" % uid)
+        bot.reply_to(lib.message, "Pedido en %s" % place)
         notifyFrom(lib.message)
     else:
         place = lib.data
         status = "checked in"
         User.set_config(uid, place, status)
-        bot.reply_to(lib.message, "checked in at %s" % place)
-        bot.reply_to(lib.message, "uid %s" % uid)
+        bot.reply_to(lib.message, "Entrado a %s" % place)
+
+
+@bot.callback_query_handler(func=lambda ans: ans.data)
+def userDec(ans):
+    if ans.data != "no":
+        bot.send_message(ans.data, "Aceptado!")
 
 
 @bot.message_handler(commands=['checkout'])
@@ -36,7 +38,7 @@ def load(message):
     place = "none"
     status = "none"
     User.set_config(cid, place, status)
-    bot.reply_to(message, "checked out from %s" %data.place)
+    bot.reply_to(message, "Salido de %s" %data.place)
 
 
 
@@ -49,11 +51,11 @@ def notifyFrom(message):
         n_users=0
         for user in users:
             cid = user.cid
-            bot.send_message(cid, 'un nuevo usuario quiere que le guardes el sitio, aceptas?')
+            getanswer(cid,message.chat.id)
             n_users = n_users + 1
-        bot.reply_to(message, "%i usuarios fueron notificados, esperando respuesta"%n_users)
+        bot.reply_to(message, "%i Usuarios fueron notificados, esperando respuesta"%n_users)
     else:
-        bot.reply_to(message, "no hay ningun usuario en la biblioteca")
+        bot.reply_to(message, "No hay ningun usuario en la biblioteca")
 
 
 # dev functions
