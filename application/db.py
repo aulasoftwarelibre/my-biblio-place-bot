@@ -1,26 +1,22 @@
 # coding=utf-8
 from telebot import util
 from application import bot
-from model.chat import Chat
+from model.users import User
+form application import boards
 
 
-@bot.message_handler(commands=['save'])
-def save(message):
+@bot.message_handler(commands=['checkin'])
+def checkin(message):
     """
     Guarda un dato en el chat que se puede recuperar después
     """
-
-    data = util.extract_arguments(message.text)
-    if not data:
-        bot.reply_to(message, "Debe indicar el dato que quiere que guarde")
-        return
-
-    chat_id = message.chat.id
-    Chat.set_config(chat_id, 'memory', data)
-    bot.reply_to(message, "Dato guardado. Usa /load para recuperar")
+    uid = message.from_user.id
+    place = getlocation(message)
+    status = getstatus(message)
+    Chat.set_config(uid, place, status)
 
 
-@bot.message_handler(commands=['load'])
+@bot.message_handler(commands=['chechout'])
 def load(message):
     """
     Recupera un dato guardado con save
@@ -33,3 +29,15 @@ def load(message):
         return
 
     bot.reply_to(message, "Dato recuperado: %s" % data.value)
+
+
+def update_user_status(userid, place, status):
+    """
+
+    """
+    if not userid:
+        return -1
+
+    # saves the status of the user in the database
+    User.set_config(userid, place, status)
+    return "Dato guardado correctamente."
