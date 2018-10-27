@@ -24,7 +24,7 @@ class User(db.Model):
         Returns:
             :return: Instancia del usuario con los el valor almacenado
         """
-        record = db.session.query(User).first()
+        record = db.session.query(User).filter_by(uid=uid).first()
 
         if record is None:
             record = User(uid=uid, place=place, status=status, created_at=datetime.now())
@@ -40,19 +40,32 @@ class User(db.Model):
         return record
 
     @staticmethod
-    def get_config(chat, key):
+    def get_config(uid):
         """ Recupera un valor
 
         Args:
-            :param chat: Id. del chat
-            :param key: Clave del valor a recuperar
+            :param uid: Id. del usuario
 
         Returns:
             :return: Instancia de Chat que coincide con la clave o None si no existe
         """
-        record = db.session.query(Chat).filter_by(chat=chat, key=key).first()
+        record = db.session.query(User).filter_by(uid=uid).first()
         db.session.close()
 
         return record
 
+    @staticmethod
+    def get_checked_in_at(place):
+        """ Recupera un valor
+
+        Args:
+            :param place: lugar del usuario
+
+        Returns:
+            :return: array de usuarios
+        """
+        record = db.session.query(User).filter_by(place=place).all()
+        db.session.close()
+
+        return record
 
