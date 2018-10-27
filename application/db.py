@@ -16,6 +16,7 @@ def checkin(lib):
         User.set_config(uid, place, status)
         bot.reply_to(lib.message, "requested at %s" % place)
         bot.reply_to(lib.message, "as user %s" % uid)
+        notifyFrom(lib.message)
     else:
         place = lib.data
         status = "checked in"

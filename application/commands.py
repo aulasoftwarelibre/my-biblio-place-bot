@@ -14,7 +14,7 @@ def preCheckIn(message):
     data = User.get_config(message.chat.id)
     cid = message.chat.id
     status = data.status
-    User.set_config(cid, "none", status,)
+    User.set_config(cid, "none", "none")
     getlocation(message)
 
 
