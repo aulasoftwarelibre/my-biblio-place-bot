@@ -1,8 +1,8 @@
 # coding=utf-8
 from telebot import util
 from application import bot
-from model.users import User
-form application import boards
+from model.User import User
+from application import boards
 
 
 @bot.message_handler(commands=['checkin'])
@@ -11,9 +11,10 @@ def checkin(message):
     Guarda un dato en el chat que se puede recuperar después
     """
     uid = message.from_user.id
-    place = getlocation(message)
-    status = getstatus(message)
-    Chat.set_config(uid, place, status)
+    place = "test"
+    status = "cheched in"
+    record = User.set_config(uid, place, status)
+    bot.reply_to(message,record.uid)
 
 
 @bot.message_handler(commands=['chechout'])

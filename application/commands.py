@@ -1,6 +1,6 @@
 # coding=utf-8
 from application import bot
-from model.users import User
+from model.User import User
 
 
 @bot.message_handler(commands=['start'])

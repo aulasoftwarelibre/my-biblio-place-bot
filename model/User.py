@@ -24,10 +24,10 @@ class User(db.Model):
         Returns:
             :return: Instancia del usuario con los el valor almacenado
         """
-        record = db.session.query(uid).filter_by(uid=uid).first()
+        record = db.session.query(User).first()
 
         if record is None:
-            record = users(uid=uid, place=place, status=status, created_at=datetime.now())
+            record = User(uid=uid, place=place, status=status, created_at=datetime.now())
             db.session.add(record)
         else:
             record.status = status
