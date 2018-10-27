@@ -4,21 +4,6 @@ from application import bot
 from model.User import User
 
 
-def update_user_status(message):
-    """
-    Guarda un dato en el chat que se puede recuperar después
-    """
-
-    data = util.extract_arguments(message.text)
-    if not data:
-        bot.reply_to(message, "Error del servidor, contacte el administrador github.com/aulasoftwarelibre/my-biblio-place-bot")
-        return
-
-    chat_id = message.chat.id
-    Chat.set_config(chat_id, 'memory', data)
-    bot.reply_to(message, "Dato guardado. Usa /load para recuperar")
-
-
 @bot.message_handler(commands=['checkin'])
 def checkin(message):
     """
@@ -40,10 +25,37 @@ def load(message):
 
     cid = message.chat.id
     data = User.get_config(cid)
-    place = data.place
-    status = "checked out"
-    User.set_config(cid, "", status)
-    bot.reply_to(message, "checked out from %s" %place)
+    place = "none"
+    status = "none"
+    User.set_config(cid, place, status)
+    bot.reply_to(message, "checked out from %s" %data.place)
+
+@bot.message_handler(commands=['request'])
+def load(message):
+    cid = message.chat.id
+    place = "test"
+    status = "requesting"
+    User.set_config(cid, place, status)
+
+
+
+@bot.message_handler(commands=['ntf'])
+def notifyFrom(message):
+    data = User.get_config(message.chat.id)
+    users = User.get_checked_in_at(data.place)
+
+    if len(users) > 0:
+        n_users=0
+        for user in users:
+            cid = user.cid
+            bot.send_message(cid, 'un nuevo usuario quiere que le guardes el sitio, aceptas?')
+            n_users = n_users + 1
+        bot.reply_to(message, "%i usuarios fueron notificados, esperando respuesta"%n_users)
+    else:
+        bot.reply_to(message, "no hay ningun usuario en la biblioteca")
+
+
+# dev functions
 
 @bot.message_handler(commands=['list'])
 def load(message):
@@ -51,23 +63,10 @@ def load(message):
     Recupera un dato guardado con save
     """
 
-    users = User.get_checked_in_at("test")
+    users = User.get_all()
 
     if len(users)>0:
         for user in users:
-            cid = user.cid
-            bot.reply_to(message, "user: %s" %cid)
+            bot.send_message(message.chat.id, "user: %s\n    place: %s\n    status: %s" %(user.cid, user.place, user.status,))
     else:
-        bot.reply_to(message, "not users in this place")
-
-
-@bot.message_handler(commands=['ntf'])
-def notify(message):
-    users = User.get_checked_in_at("test")
-
-    if len(users) > 0:
-        for user in users:
-            cid = user.cid
-            bot.send_message(cid, 'you are being notified')
-    else:
-        bot.reply_to(message, "not users in this place")
+        bot.reply_to(message, "not users")

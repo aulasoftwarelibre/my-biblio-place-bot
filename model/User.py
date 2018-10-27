@@ -64,7 +64,18 @@ class User(db.Model):
         Returns:
             :return: array de usuarios
         """
-        record = db.session.query(User).filter_by(place=place).all()
+        record = db.session.query(User).filter_by(place=place,status="checked in").all()
+        db.session.close()
+
+        return record
+
+    @staticmethod
+    def get_all():
+        """
+        Returns:
+            :return: array de usuarios
+        """
+        record = db.session.query(User).all()
         db.session.close()
 
         return record
