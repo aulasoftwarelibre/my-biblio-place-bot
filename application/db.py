@@ -19,18 +19,14 @@ def update_user_status(message):
     bot.reply_to(message, "Dato guardado. Usa /load para recuperar")
 
 
-@bot.message_handler(commands=['checkin'])
-def checkin(message):
-    """
-    Guarda un dato en el chat que se puede recuperar después
-    """
-    uid = message.from_user.id
-    place = "test"
+@bot.callback_query_handler(func=lambda lib: lib.data in ["BRabanales", "BMedicinaEnfermeria", "BCienciasEducacion", "BDerecho", "BFilosofiaLetras", "BGeneral"])
+def checkin(lib):
+    uid = lib.from_user.id
+    place = lib.data
     status = "checked in"
     User.set_config(uid, place, status)
-    bot.reply_to(message, "checked in at %s" %place)
-    bot.reply_to(message, "uid %s" %uid)
-
+    bot.reply_to(lib.message, "checked in at %s" % place)
+    bot.reply_to(lib.message, "uid %s" % uid)
 
 @bot.message_handler(commands=['checkout'])
 def load(message):
