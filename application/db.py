@@ -14,7 +14,7 @@ def checkin(message):
     place = "test"
     status = "cheched in"
     record = User.set_config(uid, place, status)
-    bot.reply_to(message,record.uid)
+    bot.reply_to(message, "test")
 
 
 @bot.message_handler(commands=['chechout'])

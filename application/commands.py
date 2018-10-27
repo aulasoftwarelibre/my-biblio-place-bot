@@ -8,8 +8,8 @@ def start(message):
     bot.reply_to(message, 'Hello, ' + message.from_user.first_name)
 
 
-# 
-@bot.message_handler(commands=['chechin'])
+
+#@bot.message_handler(commands=['chechin'])
 def update_user_status(message):
     """
     Guarda un dato en el chat que se puede recuperar después
