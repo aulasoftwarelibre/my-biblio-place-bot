@@ -4,17 +4,14 @@ from application import bot
 from model.User import User
 
 
-@bot.message_handler(commands=['checkin'])
-def checkin(message):
-    """
-    Guarda un dato en el chat que se puede recuperar después
-    """
-    cid = message.chat.id
-    place = "test"
+@bot.callback_query_handler(func=lambda lib: lib.data in ["BRabanales", "BMedicinaEnfermeria", "BCienciasEducacion", "BDerecho", "BFilosofiaLetras", "BGeneral"])
+def checkin(lib):
+    uid = lib.from_user.id
+    place = lib.data
     status = "checked in"
-    User.set_config(cid, place, status)
-    bot.reply_to(message, "checked in at %s" %place)
-    bot.reply_to(message, "cid %s" %cid)
+    User.set_config(uid, place, status)
+    bot.reply_to(lib.message, "checked in at %s" % place)
+    bot.reply_to(lib.message, "uid %s" % uid)
 
 
 @bot.message_handler(commands=['checkout'])
