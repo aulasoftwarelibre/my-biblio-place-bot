@@ -41,19 +41,18 @@ def load(message):
     bot.reply_to(message, "Salido de %s" %data.place)
 
 
-
 @bot.message_handler(commands=['ntf'])
 def notifyFrom(message):
     data = User.get_config(message.chat.id)
     users = User.get_checked_in_at(data.place)
 
     if len(users) > 0:
-        n_users=0
+        n_users = 0
         for user in users:
             cid = user.cid
             getanswer(cid, message.chat.id)
             n_users = n_users + 1
-        bot.reply_to(message, "%i Usuarios fueron notificados, esperando respuesta"%n_users)
+        bot.reply_to(message, "%i Usuarios fueron notificados, esperando respuesta" % n_users)
     else:
         bot.reply_to(message, "No hay ningun usuario en la biblioteca")
 
@@ -68,8 +67,8 @@ def load(message):
 
     users = User.get_all()
 
-    if len(users)>0:
+    if len(users) > 0:
         for user in users:
-            bot.send_message(message.chat.id, "user: %s\n    place: %s\n    status: %s" %(user.cid, user.place, user.status,))
+            bot.send_message(message.chat.id, "user: %s\n    place: %s\n    status: %s" % (user.cid, user.place, user.status,))
     else:
         bot.reply_to(message, "not users")
