@@ -16,7 +16,7 @@ def getlocation(message):
     bot.send_message(message.chat.id, "¿En que biblioteca?", reply_markup=keyboard)
 
 
-def getanswer(cid,rcid):
+def getanswer(cid, rcid):
     keyboard = types.InlineKeyboardMarkup(row_width=2)
 
     keyboard.add(types.InlineKeyboardButton("Si", callback_data=rcid),
