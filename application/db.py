@@ -12,9 +12,9 @@ def checkin(message):
     """
     uid = message.from_user.id
     place = "test"
-    status = "cheched in"
-    record = User.set_config(uid, place, status)
-    bot.reply_to(message, "test")
+    status = "checked in"
+    User.set_config(uid, place, status)
+    bot.reply_to(message, "checked in at: %s" %place)
 
 
 @bot.message_handler(commands=['chechout'])
@@ -23,22 +23,8 @@ def load(message):
     Recupera un dato guardado con save
     """
 
-    chat_id = message.chat.id
-    data = Chat.get_config(chat_id, 'memory')
-    if not data:
-        bot.reply_to(message, "Aún no has guardado nada")
-        return
-
-    bot.reply_to(message, "Dato recuperado: %s" % data.value)
-
-
-def update_user_status(userid, place, status):
-    """
-
-    """
-    if not userid:
-        return -1
-
-    # saves the status of the user in the database
-    User.set_config(userid, place, status)
-    return "Dato guardado correctamente."
+    uid = message.from_user.id
+    place = "test"
+    status = "checked in"
+    User.set_config(uid, place, status)
+    bot.reply_to(message, "checked out : %s" % place)
