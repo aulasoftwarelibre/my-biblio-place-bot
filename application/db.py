@@ -2,7 +2,6 @@
 from telebot import util
 from application import bot
 from model.User import User
-from application import boards
 
 
 @bot.message_handler(commands=['checkin'])
