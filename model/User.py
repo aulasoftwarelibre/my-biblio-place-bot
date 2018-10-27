@@ -6,28 +6,28 @@ class User(db.Model):
     """
 
     """
-    __tablename__ = 'users'
-    uid = db.Column(db.Integer, primary_key=True)
+    __tablename__ = 'users_'
+    cid = db.Column(db.Integer, primary_key=True)
     place = db.Column(db.String, nullable=False)
     status = db.Column(db.String(255), nullable=False)
     created_at = db.Column(db.DateTime, nullable=False)
 
     @staticmethod
-    def set_config(uid, place, status):
+    def set_config(cid, place, status):
         """Guarda un valor
 
         Args:
-            :param uid: Id. del usuario
+            :param cid: Id. del chat
             :param place: lugar del usuario
             :param status: Valor del estado del usuario
 
         Returns:
             :return: Instancia del usuario con los el valor almacenado
         """
-        record = db.session.query(User).filter_by(uid=uid).first()
+        record = db.session.query(User).filter_by(cid=cid).first()
 
         if record is None:
-            record = User(uid=uid, place=place, status=status, created_at=datetime.now())
+            record = User(cid=cid, place=place, status=status, created_at=datetime.now())
             db.session.add(record)
         else:
             record.status = status
@@ -40,16 +40,16 @@ class User(db.Model):
         return record
 
     @staticmethod
-    def get_config(uid):
+    def get_config(cid):
         """ Recupera un valor
 
         Args:
-            :param uid: Id. del usuario
+            :param cid: Id. del chat
 
         Returns:
             :return: Instancia de Chat que coincide con la clave o None si no existe
         """
-        record = db.session.query(User).filter_by(uid=uid).first()
+        record = db.session.query(User).filter_by(cid=cid).first()
         db.session.close()
 
         return record

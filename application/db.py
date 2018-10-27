@@ -24,12 +24,12 @@ def checkin(message):
     """
     Guarda un dato en el chat que se puede recuperar después
     """
-    uid = message.from_user.id
+    cid = message.chat.id
     place = "test"
     status = "checked in"
-    User.set_config(uid, place, status)
+    User.set_config(cid, place, status)
     bot.reply_to(message, "checked in at %s" %place)
-    bot.reply_to(message, "uid %s" %uid)
+    bot.reply_to(message, "cid %s" %cid)
 
 
 @bot.message_handler(commands=['checkout'])
@@ -38,11 +38,11 @@ def load(message):
     Recupera un dato guardado con save
     """
 
-    uid = message.from_user.id
-    data = User.get_config(uid)
+    cid = message.chat.id
+    data = User.get_config(cid)
     place = data.place
     status = "checked out"
-    User.set_config(uid, "", status)
+    User.set_config(cid, "", status)
     bot.reply_to(message, "checked out from %s" %place)
 
 @bot.message_handler(commands=['list'])
@@ -55,9 +55,19 @@ def load(message):
 
     if len(users)>0:
         for user in users:
-            uid = user.uid
-            bot.reply_to(message, "user: %s" % uid)
+            cid = user.cid
+            bot.reply_to(message, "user: %s" %cid)
     else:
         bot.reply_to(message, "not users in this place")
 
 
+@bot.message_handler(commands=['ntf'])
+def notify(message):
+    users = User.get_checked_in_at("test")
+
+    if len(users) > 0:
+        for user in users:
+            cid = user.cid
+            bot.send_message(cid, 'you are being notified')
+    else:
+        bot.reply_to(message, "not users in this place")
