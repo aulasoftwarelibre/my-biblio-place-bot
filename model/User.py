@@ -49,7 +49,13 @@ class User(db.Model):
         Returns:
             :return: Instancia de Chat que coincide con la clave o None si no existe
         """
+
         record = db.session.query(User).filter_by(cid=cid).first()
+
+        if record is None:
+            record = User(cid=cid, place="none", status="none", created_at=datetime.now())
+            db.session.add(record)
+
         db.session.close()
 
         return record

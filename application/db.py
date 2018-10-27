@@ -4,14 +4,24 @@ from application import bot
 from model.User import User
 
 
+
 @bot.callback_query_handler(func=lambda lib: lib.data in ["BRabanales", "BMedicinaEnfermeria", "BCienciasEducacion", "BDerecho", "BFilosofiaLetras", "BGeneral"])
 def checkin(lib):
-    uid = lib.from_user.id
-    place = lib.data
-    status = "checked in"
-    User.set_config(uid, place, status)
-    bot.reply_to(lib.message, "checked in at %s" % place)
-    bot.reply_to(lib.message, "uid %s" % uid)
+    uid = lib.message.chat.id
+    data = User.get_config(uid)
+    print(data.status)
+    if data.status == "requesting":
+        place = lib.data
+        status = "requesting"
+        User.set_config(uid, place, status)
+        bot.reply_to(lib.message, "requested at %s" % place)
+        bot.reply_to(lib.message, "as user %s" % uid)
+    else:
+        place = lib.data
+        status = "checked in"
+        User.set_config(uid, place, status)
+        bot.reply_to(lib.message, "checked in at %s" % place)
+        bot.reply_to(lib.message, "uid %s" % uid)
 
 
 @bot.message_handler(commands=['checkout'])
@@ -26,13 +36,6 @@ def load(message):
     status = "none"
     User.set_config(cid, place, status)
     bot.reply_to(message, "checked out from %s" %data.place)
-
-@bot.message_handler(commands=['request'])
-def load(message):
-    cid = message.chat.id
-    place = "test"
-    status = "requesting"
-    User.set_config(cid, place, status)
 
 
 
