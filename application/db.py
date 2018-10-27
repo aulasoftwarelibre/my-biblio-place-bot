@@ -51,7 +51,7 @@ def notifyFrom(message):
         n_users=0
         for user in users:
             cid = user.cid
-            getanswer(cid,message.chat.id)
+            getanswer(cid, message.chat.id)
             n_users = n_users + 1
         bot.reply_to(message, "%i Usuarios fueron notificados, esperando respuesta"%n_users)
     else:
