@@ -14,3 +14,13 @@ def getlocation(message):
     )
 
     bot.send_message(message.chat.id, "¿En que biblioteca?", reply_markup=keyboard)
+
+
+def getanswer(cid,rcid):
+    keyboard = types.InlineKeyboardMarkup(row_width=2)
+
+    keyboard.add(types.InlineKeyboardButton("Si", callback_data=rcid),
+                 types.InlineKeyboardButton("No", callback_data="no")
+    )
+
+    bot.send_message(cid, "Alguien necesita un sitio ¿se lo guardas?", reply_markup=keyboard)
