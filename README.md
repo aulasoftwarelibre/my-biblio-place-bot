@@ -1,6 +1,6 @@
 # Hackathon bot
 
-Ejemplo de bot desplegado en Heroku para el hackathon del Aula de Software Libre.
+Ejemplo de bot desplegado en Heroku para el hackathon del Aula de Software Libre. En este caso se trata de un bot de telegram que permite guardar el sitio en las diferentes bibliotecas de la Universidad de Córdoba a través de una notificacion que llegará a los usuarios del bot que se encuentren en una de las bibliotecas cuando alguien requiera un lugar en la misma.
 
 ## Instalación en el servidor
 
